@@ -81,7 +81,7 @@ type itemType = {
 export const PieChartMain = (props: propTypes) => {
   const {isThreeD} = props;
   const propData = props.data;
-  const data = [];
+  const data: any = [];
   if (propData) {
     for (let i = 0; i < propData.length; i++) {
       if (propData[i].value !== 0) {
@@ -174,15 +174,15 @@ export const PieChartMain = (props: propTypes) => {
 
   let total =
     data && data.length
-      ? data.map(item => item.value).reduce((v, a) => v + a)
+      ? data.map((item: any) => item.value).reduce((v: any, a: any) => v + a)
       : 0;
   let acc = 0;
-  let pData = data.map(item => {
+  let pData = data.map((item: any) => {
     acc += item.value / total;
     return acc;
   });
   acc = 0;
-  let mData = data.map(item => {
+  let mData = data.map((item: any) => {
     let pAcc = acc;
     acc += item.value / total;
     return pAcc + (acc - pAcc) / 2;
@@ -215,7 +215,7 @@ export const PieChartMain = (props: propTypes) => {
         height={radius * 2 + strokeWidth}
         width={radius * 2 + strokeWidth}>
         <Defs>
-          {data.map((item, index) => {
+          {data.map((item: any, index: number) => {
             return (
               <RadialGradient
                 key={index + ''}
@@ -260,7 +260,7 @@ export const PieChartMain = (props: propTypes) => {
             />
           </>
         ) : (
-          data.map((item, index) => {
+          data.map((item: any, index: number) => {
             // console.log('index', index);
             let nextItem;
             if (index === pData.length - 1) nextItem = pData[0];
@@ -309,7 +309,7 @@ export const PieChartMain = (props: propTypes) => {
                   } else if (props.onPress) {
                     props.onPress(item, index);
                   }
-                  if (props.focusOnPress) {
+                  if (props.focusOnPress && props.setSelectedIndex) {
                     if (props.selectedIndex === index) {
                       if (toggleFocusOnPress) {
                         props.setSelectedIndex(-1);
@@ -325,7 +325,7 @@ export const PieChartMain = (props: propTypes) => {
         )}
 
         {showText &&
-          data.map((item, index) => {
+          data.map((item: any, index: number) => {
             let mx = cx * (1 + Math.sin(2 * pi * mData[index] + initialAngle));
             let my = cy * (1 - Math.cos(2 * pi * mData[index] + initialAngle));
 
@@ -395,7 +395,7 @@ export const PieChartMain = (props: propTypes) => {
                         : props.onPress
                         ? props.onPress(item, index)
                         : null;
-                      if (props.focusOnPress) {
+                      if (props.focusOnPress && props.setSelectedIndex) {
                         if (props.selectedIndex === index) {
                           if (toggleFocusOnPress) {
                             props.setSelectedIndex(-1);
@@ -429,7 +429,7 @@ export const PieChartMain = (props: propTypes) => {
                       : props.onPress
                       ? props.onPress(item, index)
                       : null;
-                    if (props.focusOnPress) {
+                    if (props.focusOnPress && props.setSelectedIndex) {
                       if (props.selectedIndex === index) {
                         if (toggleFocusOnPress) {
                           props.setSelectedIndex(-1);

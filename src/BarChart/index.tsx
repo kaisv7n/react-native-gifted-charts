@@ -216,7 +216,7 @@ type itemType = {
 };
 
 export const BarChart = (props: PropTypes) => {
-  const scrollRef = useRef();
+  const scrollRef: any = useRef();
   const [points, setPoints] = useState('');
   const [arrowPoints, setArrowPoints] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -228,8 +228,8 @@ export const BarChart = (props: PropTypes) => {
       return [];
     }
     if (props.yAxisOffset) {
-      return props.data.map(item => {
-        item.value = item.value - props.yAxisOffset;
+      return props.data.map((item: any) => {
+        item.value = item.value - (props.yAxisOffset ?? 0);
         return item;
       });
     }
@@ -335,7 +335,7 @@ export const BarChart = (props: PropTypes) => {
   const containerHeight = props.height || 200;
   const noOfSections = props.noOfSections || 10;
   const horizSections = [{value: '0'}];
-  const horizSectionsBelow = [];
+  const horizSectionsBelow: any = [];
   const stepHeight = props.stepHeight || containerHeight / noOfSections;
   const spacing = props.spacing === 0 ? 0 : props.spacing || 20;
   const labelWidth = props.labelWidth || 0;
@@ -347,10 +347,10 @@ export const BarChart = (props: PropTypes) => {
   let maxItem = 0,
     minItem = 0;
   if (props.stackData) {
-    props.stackData.forEach(stackItem => {
+    props.stackData.forEach((stackItem: any) => {
       // console.log('stackItem', stackItem);
       let stackSum = stackItem.stacks.reduce(
-        (acc, stack) => acc + stack.value,
+        (acc: number, stack: any) => acc + stack.value,
         0,
       );
       // console.log('stackSum--->', stackSum);
@@ -366,11 +366,12 @@ export const BarChart = (props: PropTypes) => {
     });
   } else {
     data.forEach((item: itemType) => {
-      if (item.value > maxItem) {
-        maxItem = item.value;
+      const itemValue = item.value ?? 0
+      if (itemValue > maxItem) {
+        maxItem = itemValue
       }
-      if (item.value < minItem) {
-        minItem = item.value;
+      if (itemValue < minItem) {
+        minItem = itemValue
       }
       totalWidth +=
         (item.barWidth || props.barWidth || 30) +
@@ -514,13 +515,13 @@ export const BarChart = (props: PropTypes) => {
   // console.log('olddata', oldData);
 
   const getArrowPoints = (
-    arrowTipX,
-    arrowTipY,
-    x1,
-    y1,
-    arrowLength,
-    arrowWidth,
-    showArrowBase,
+    arrowTipX: number,
+    arrowTipY: number,
+    x1: number,
+    y1: number,
+    arrowLength: number,
+    arrowWidth: number,
+    showArrowBase: boolean,
   ) => {
     let dataLineSlope = (arrowTipY - y1) / (arrowTipX - x1);
     let d = arrowLength;
@@ -786,7 +787,7 @@ export const BarChart = (props: PropTypes) => {
     outputRange: [0, totalWidth],
   });
 
-  const getLabel = (val, index) => {
+  const getLabel = (val: string, index: number) => {
     let label = '';
     if (
       showFractionalValues ||
@@ -965,7 +966,7 @@ export const BarChart = (props: PropTypes) => {
           /***********************************************************************************************/
           /***********************************************************************************************/
         }
-        {horizSectionsBelow.map((sectionItems, index) => {
+        {horizSectionsBelow.map((sectionItems: any, index: number) => {
           return (
             <View
               key={index}
@@ -1025,7 +1026,7 @@ export const BarChart = (props: PropTypes) => {
           /***********************************************************************************************/
           props.hideAxesAndRules !== true &&
             !hideYAxisText &&
-            horizSectionsBelow.map((sectionItems, index) => {
+            horizSectionsBelow.map((sectionItems: any, index: number) => {
               let label = getLabel(
                 horizSectionsBelow[horizSectionsBelow.length - 1 - index].value,
                 index,
@@ -1332,7 +1333,7 @@ export const BarChart = (props: PropTypes) => {
       );
     });
   };
-  const renderSpecificDataPoints = dataForRender => {
+  const renderSpecificDataPoints = (dataForRender: any) => {
     return dataForRender.map((item: any, index: number) => {
       const currentBarWidth = item.barWidth || props.barWidth || 30;
       if (item.showDataPoint) {
@@ -1512,10 +1513,11 @@ export const BarChart = (props: PropTypes) => {
             labelsExtraHeight,
         },
         yAxisSide === 'right' && {marginLeft: yAxisLabelWidth + yAxisThickness},
-        props.width && !horizontal && {width: props.width},
+        (props.width && !horizontal) ? {width: props.width} : null,
         horizontal && {transform: [{rotate: '90deg'}, {translateY: 15}]},
       ]}>
       {props.hideAxesAndRules !== true && renderHorizSections()}
+      {/* @ts-ignore */}
       <ScrollView
         ref={scrollRef}
         onTouchStart={evt => {
@@ -1558,10 +1560,10 @@ export const BarChart = (props: PropTypes) => {
         indicatorStyle={props.indicatorColor}
         horizontal
         // data={props.stackData || data}
-        keyExtractor={(item, index) => index.toString()}>
+        keyExtractor={(item: any, index: number) => index.toString()}>
         <Fragment>
           {showVerticalLines &&
-            verticalLinesAr.map((item: itemType, index: number) => {
+            verticalLinesAr.map((item: itemType | number, index: number) => {
               let totalSpacing = initialSpacing;
               if (verticalLinesSpacing) {
                 totalSpacing = verticalLinesSpacing * (index + 1);
@@ -1638,7 +1640,7 @@ export const BarChart = (props: PropTypes) => {
               : renderLine()
             : null}
           {props.stackData
-            ? props.stackData.map((item, index) => {
+            ? props.stackData.map((item: any, index: number) => {
                 return (
                   <RenderStackBars
                     key={index}
@@ -1690,7 +1692,7 @@ export const BarChart = (props: PropTypes) => {
                   />
                 );
               })
-            : data.map((item, index) => (
+            : data.map((item: any, index: number) => (
                 <RenderBars
                   key={index}
                   item={item}

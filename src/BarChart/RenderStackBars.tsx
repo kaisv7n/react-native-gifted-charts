@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, TouchableOpacity, Text, ColorValue} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Svg, {Defs, Rect} from 'react-native-svg';
-import {Style} from 'util';
 
 type Props = {
   style?: any;
@@ -10,7 +9,7 @@ type Props = {
   height?: number;
   color?: ColorValue;
   topLabelComponent?: Component;
-  topLabelContainerStyle?: Style;
+  topLabelContainerStyle?: any;
   opacity?: number;
   label: String;
   labelTextStyle?: any;
@@ -38,7 +37,7 @@ type Props = {
   barBackgroundPattern?: Function;
   patternId?: String;
   xAxisTextNumberOfLines: number;
-  renderTooltip: Function;
+  renderTooltip?: Function;
   leftShiftForTooltip?: number;
   leftShiftForLastIndexTooltip: number;
   initialSpacing: number;
@@ -47,7 +46,7 @@ type Props = {
   activeOpacity: number;
   showGradient?: Boolean;
   gradientColor?: any;
-  stackData: Array<itemType>;
+  stackData: Array<any>;
 };
 type itemType = {
   value?: number;
@@ -110,7 +109,7 @@ const RenderStackBars = (props: Props) => {
         style={[
           {
             width:
-              (item.stacks[0].barWidth || props.barWidth || 30) + spacing / 2,
+              ((item.stacks ? item.stacks[0].barWidth : null) || props.barWidth || 30) + (spacing ? (spacing / 2) : 0),
             position: 'absolute',
             bottom: rotateLabel ? -40 : -25,
           },
@@ -137,13 +136,13 @@ const RenderStackBars = (props: Props) => {
     let position = 0;
     for (let i = 0; i < index; i++) {
       position +=
-        (Math.abs(props.item.stacks[i].value) * (containerHeight || 200)) /
+        (Math.abs(props.item.stacks ? props.item.stacks[i].value : 0) * (containerHeight || 200)) /
         (maxValue || 200);
     }
     return position;
   };
 
-  const totalHeight = props.item.stacks.reduce(
+  const totalHeight = props.item.stacks && props.item.stacks.reduce(
     (acc, stack) =>
       acc +
       (Math.abs(stack.value) * (containerHeight || 200)) / (maxValue || 200),
@@ -151,7 +150,7 @@ const RenderStackBars = (props: Props) => {
   );
 
   const static2DSimple = (item: itemType, index: number) => {
-    const cotainsNegative = item.stacks.some(item => item.value < 0);
+    const cotainsNegative = item.stacks && item.stacks.some(item => item.value < 0);
     return (
       <>
         <TouchableOpacity
@@ -168,7 +167,7 @@ const RenderStackBars = (props: Props) => {
           style={[
             {
               position: 'absolute',
-              width: item.stacks[0].barWidth || props.barWidth || 30,
+              width: (item.stacks ? item.stacks[0].barWidth : null) || props.barWidth || 30,
               height: '100%',
             },
             cotainsNegative && {
@@ -178,7 +177,7 @@ const RenderStackBars = (props: Props) => {
               ],
             },
           ]}>
-          {item.stacks.map((stackItem, index) => {
+          {item.stacks && item.stacks.map((stackItem, index) => {
             return (
               <TouchableOpacity
                 key={index}
@@ -245,7 +244,7 @@ const RenderStackBars = (props: Props) => {
               <Defs>
                 {item.barBackgroundPattern
                   ? item.barBackgroundPattern()
-                  : barBackgroundPattern()}
+                  : barBackgroundPattern && barBackgroundPattern()}
               </Defs>
               <Rect
                 stroke="transparent"
@@ -290,7 +289,7 @@ const RenderStackBars = (props: Props) => {
           {
             // overflow: 'visible',
             marginBottom: 60,
-            width: item.stacks[0].barWidth || props.barWidth || 30,
+            width: (item.stacks ? item.stacks[0].barWidth : null) || props.barWidth || 30,
             height: totalHeight,
             marginRight: spacing,
           },
@@ -333,7 +332,7 @@ const RenderStackBars = (props: Props) => {
               index === stackData.length - 1
                 ? leftSpacing - leftShiftForLastIndexTooltip
                 : leftSpacing -
-                  (item.leftShiftForTooltip ?? leftShiftForTooltip),
+                  (item.leftShiftForTooltip ?? leftShiftForTooltip ?? 0),
             zIndex: 1000,
           }}>
           {renderTooltip(item, index)}

@@ -25,7 +25,7 @@ import Svg, {
 } from 'react-native-svg';
 import Rule from '../Components/lineSvg';
 
-let initialData = null;
+let initialData: any = null;
 
 type propTypes = {
   height?: number;
@@ -244,10 +244,10 @@ type sectionType = {
 };
 
 export const LineChartBicolor = (props: propTypes) => {
-  const scrollRef = useRef();
+  const scrollRef: any = useRef();
   const [toggle, setToggle] = useState(false);
-  const [pointsArray, setPointsArray] = useState([]);
-  const [fillPointsArray, setFillPointsArray] = useState([]);
+  const [pointsArray, setPointsArray] = useState<any>([]);
+  const [fillPointsArray, setFillPointsArray] = useState<any>([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const containerHeight = props.height || 200;
   const noOfSections = props.noOfSections || 10;
@@ -257,7 +257,7 @@ export const LineChartBicolor = (props: propTypes) => {
     }
     if (props.yAxisOffset) {
       return props.data.map(item => {
-        item.value = item.value - props.yAxisOffset;
+        item.value = (item.value ?? 0) - (props.yAxisOffset ?? 0);
         return item;
       });
     }
@@ -280,7 +280,7 @@ export const LineChartBicolor = (props: propTypes) => {
 
   const startIndex1 = props.startIndex || 0;
 
-  let endIndex1;
+  let endIndex1: number;
   if (props.endIndex === undefined || props.endIndex === null) {
     endIndex1 = data.length - 1;
   } else {
@@ -348,11 +348,12 @@ export const LineChartBicolor = (props: propTypes) => {
   let maxItem = 0,
     minItem = 0;
   data.forEach((item: itemType) => {
-    if (item.value > maxItem) {
-      maxItem = item.value;
+    const itemValue = (item.value ?? 0)
+    if (itemValue > maxItem) {
+      maxItem = itemValue
     }
-    if (item.value < minItem) {
-      minItem = item.value;
+    if (itemValue < minItem) {
+      minItem = itemValue
     }
     totalWidth += spacing;
   });
@@ -391,31 +392,31 @@ export const LineChartBicolor = (props: propTypes) => {
         'M' +
         (initialSpacing - dataPointsWidth1 / 2) +
         ' ' +
-        (yAtxAxis - (data[0].value * containerHeight) / maxValue),
+        (yAtxAxis - ((data[0]?.value ?? 0) * containerHeight) / maxValue),
       pv,
       nv;
     for (let i = 0; i < data.length - 1; i++) {
-      pv = data[i].value;
-      nv = data[i + 1].value;
+      pv = data[i].value ?? 0;
+      nv = data[i + 1]?.value ?? 0;
 
       if (pv < 0 && nv < 0) {
         pp +=
           'L' +
           (initialSpacing - dataPointsWidth1 / 2 + spacing * i) +
           ' ' +
-          (yAtxAxis - (data[i].value * containerHeight) / maxValue) +
+          (yAtxAxis - (pv * containerHeight) / maxValue) +
           ' ';
       } else if (pv < 0 && nv > 0) {
         pp +=
           'L' +
           (initialSpacing - dataPointsWidth1 / 2 + spacing * i) +
           ' ' +
-          (yAtxAxis - (data[i].value * containerHeight) / maxValue) +
+          (yAtxAxis - (pv * containerHeight) / maxValue) +
           ' ';
         let prevX = initialSpacing - dataPointsWidth1 / 2 + spacing * i;
-        let prevY = yAtxAxis - (data[i].value * containerHeight) / maxValue;
+        let prevY = yAtxAxis - (pv * containerHeight) / maxValue;
         let nextX = initialSpacing - dataPointsWidth1 / 2 + spacing * (i + 1);
-        let nextY = yAtxAxis - (data[i + 1].value * containerHeight) / maxValue;
+        let nextY = yAtxAxis - (nv * containerHeight) / maxValue;
         let slope = (nextY - prevY) / (nextX - prevX);
         let x = (yAtxAxis - prevY) / slope + prevX;
         pp += 'L' + (x - thickness / 2) + ' ' + yAtxAxis + ' ';
@@ -437,12 +438,12 @@ export const LineChartBicolor = (props: propTypes) => {
           'L' +
           (initialSpacing - dataPointsWidth1 / 2 + spacing * i) +
           ' ' +
-          (yAtxAxis - (data[i].value * containerHeight) / maxValue) +
+          (yAtxAxis - (pv * containerHeight) / maxValue) +
           ' ';
         let prevX = initialSpacing - dataPointsWidth1 / 2 + spacing * i;
-        let prevY = yAtxAxis - (data[i].value * containerHeight) / maxValue;
+        let prevY = yAtxAxis - (pv * containerHeight) / maxValue;
         let nextX = initialSpacing - dataPointsWidth1 / 2 + spacing * (i + 1);
-        let nextY = yAtxAxis - (data[i + 1].value * containerHeight) / maxValue;
+        let nextY = yAtxAxis - (nv * containerHeight) / maxValue;
         let slope = (nextY - prevY) / (nextX - prevX);
 
         let x = (yAtxAxis - prevY) / slope + prevX;
@@ -466,19 +467,19 @@ export const LineChartBicolor = (props: propTypes) => {
           'L' +
           (initialSpacing - dataPointsWidth1 / 2 + spacing * i) +
           ' ' +
-          (yAtxAxis - (data[i].value * containerHeight) / maxValue) +
+          (yAtxAxis - (pv * containerHeight) / maxValue) +
           ' ';
       }
     }
     let i = data.length - 1;
-    pv = data[i - 1].value;
-    nv = data[i].value;
+    pv = data[i - 1]?.value ?? 0;
+    nv = data[i]?.value ?? 0;
     if ((pv > 0 && nv > 0) || (pv < 0 && nv < 0)) {
       pp +=
         'L' +
         (initialSpacing - dataPointsWidth1 / 2 + spacing * i) +
         ' ' +
-        (yAtxAxis - (data[i].value * containerHeight) / maxValue) +
+        (yAtxAxis - (nv * containerHeight) / maxValue) +
         ' ';
     }
     let pointsOb = {
@@ -493,7 +494,7 @@ export const LineChartBicolor = (props: propTypes) => {
 
     let startIndex = -1,
       endIndex = -1,
-      startX,
+      startX: any,
       startY,
       endY,
       color = 'green',
@@ -502,19 +503,19 @@ export const LineChartBicolor = (props: propTypes) => {
 
     pp = 'M' + (initialSpacing - dataPointsWidth1 / 2) + ' ' + yAtxAxis;
     for (i = 0; i < data.length - 1; i++) {
-      pv = data[i].value;
-      nv = data[i + 1].value;
+      pv = data[i]?.value ?? 0;
+      nv = data[i + 1]?.value ?? 0;
       pp +=
         'L' +
         (initialSpacing - dataPointsWidth1 / 2 + spacing * i) +
         ' ' +
-        (yAtxAxis - (data[i].value * containerHeight) / maxValue) +
+        (yAtxAxis - (pv * containerHeight) / maxValue) +
         ' ';
       if ((pv > 0 && nv < 0) || (pv < 0 && nv > 0)) {
         let prevX = initialSpacing - dataPointsWidth1 / 2 + spacing * i;
-        let prevY = yAtxAxis - (data[i].value * containerHeight) / maxValue;
+        let prevY = yAtxAxis - (pv * containerHeight) / maxValue;
         let nextX = initialSpacing - dataPointsWidth1 / 2 + spacing * (i + 1);
-        let nextY = yAtxAxis - (data[i + 1].value * containerHeight) / maxValue;
+        let nextY = yAtxAxis - (nv * containerHeight) / maxValue;
         let slope = (nextY - prevY) / (nextX - prevX);
 
         let x = (yAtxAxis - prevY) / slope + prevX;
@@ -529,24 +530,24 @@ export const LineChartBicolor = (props: propTypes) => {
         'L' +
         (initialSpacing - dataPointsWidth1 / 2 + spacing * i) +
         ' ' +
-        (yAtxAxis - (data[i].value * containerHeight) / maxValue) +
+        (yAtxAxis - ((data[i]?.value ?? 0) * containerHeight) / maxValue) +
         ' L' +
         (initialSpacing - dataPointsWidth1 / 2 + spacing * i) +
         ' ' +
         (yAtxAxis - xAxisThickness / 2);
     }
-    localArray.push({points: pp, color: data[0].value > 0 ? 'green' : 'red'});
+    localArray.push({points: pp, color: (data[0]?.value ?? 0) > 0 ? 'green' : 'red'});
 
-    let xs = [];
+    let xs: any = [];
     data.forEach((item, index) => {
       let x = initialSpacing - dataPointsWidth1 / 2 + spacing * index;
       xs.push(x + '');
     });
 
-    pointsArray.forEach((item, index) => {
+    pointsArray.forEach((item: any, index: number) => {
       let splitArray = item.points
         .split(' ')
-        .filter(spItem => spItem && spItem !== ' ');
+        .filter((spItem: any) => spItem && spItem !== ' ');
 
       if (
         splitArray[1] === yAtxAxis + '' &&
@@ -590,20 +591,20 @@ export const LineChartBicolor = (props: propTypes) => {
         ' ' +
         yAtxAxis;
       for (let i = data.length - 1; i > 0; i--) {
-        pv = data[i].value;
-        nv = data[i - 1].value;
+        pv = data[i]?.value ?? 0;
+        nv = data[i - 1]?.value ?? 0;
         pp +=
           'L' +
           (initialSpacing - dataPointsWidth1 / 2 + spacing * i) +
           ' ' +
-          (yAtxAxis - (data[i].value * containerHeight) / maxValue) +
+          (yAtxAxis - (pv * containerHeight) / maxValue) +
           ' ';
         if ((pv > 0 && nv < 0) || (pv < 0 && nv > 0)) {
           let prevX = initialSpacing - dataPointsWidth1 / 2 + spacing * i;
-          let prevY = yAtxAxis - (data[i].value * containerHeight) / maxValue;
+          let prevY = yAtxAxis - (pv * containerHeight) / maxValue;
           let nextX = initialSpacing - dataPointsWidth1 / 2 + spacing * (i - 1);
           let nextY =
-            yAtxAxis - (data[i - 1].value * containerHeight) / maxValue;
+            yAtxAxis - (nv * containerHeight) / maxValue;
           let slope = (nextY - prevY) / (nextX - prevX);
 
           let x = (yAtxAxis - prevY) / slope + prevX;
@@ -615,7 +616,7 @@ export const LineChartBicolor = (props: propTypes) => {
 
       localArray.push({
         points: pp,
-        color: data[data.length - 1].value > 0 ? 'green' : 'red',
+        color: (data[data.length - 1]?.value ?? 0) > 0 ? 'green' : 'red',
       });
     }
 
@@ -635,7 +636,7 @@ export const LineChartBicolor = (props: propTypes) => {
   ]);
 
   const horizSections = [{value: '0'}];
-  const horizSectionsBelow = [];
+  const horizSectionsBelow: any = [];
   const stepHeight = props.stepHeight || containerHeight / noOfSections;
   const stepValue = props.stepValue || maxValue / noOfSections;
   const noOfSectionsBelowXAxis =
@@ -915,7 +916,7 @@ export const LineChartBicolor = (props: propTypes) => {
     outputRange: [0, totalWidth],
   });
 
-  const getLabel = (val, index) => {
+  const getLabel = (val: any, index: number) => {
     let label = '';
     if (
       showFractionalValues ||
@@ -1075,7 +1076,7 @@ export const LineChartBicolor = (props: propTypes) => {
           /***********************************************************************************************/
         }
 
-        {horizSectionsBelow.map((sectionItems, index) => {
+        {horizSectionsBelow.map((sectionItems: any, index: number) => {
           return (
             <View
               key={index}
@@ -1127,7 +1128,7 @@ export const LineChartBicolor = (props: propTypes) => {
           /***********************************************************************************************/
           props.hideAxesAndRules !== true &&
             !hideYAxisText &&
-            horizSectionsBelow.map((sectionItems, index) => {
+            horizSectionsBelow.map((sectionItems: any, index: number) => {
               let label = getLabel(
                 horizSectionsBelow[horizSectionsBelow.length - 1 - index].value,
                 index,
@@ -1301,7 +1302,7 @@ export const LineChartBicolor = (props: propTypes) => {
     );
   };
 
-  const onStripPress = (item, index) => {
+  const onStripPress = (item: any, index: number) => {
     setSelectedIndex(index);
     if (props.onPress) {
       props.onPress(item, index);
@@ -1309,16 +1310,16 @@ export const LineChartBicolor = (props: propTypes) => {
   };
 
   const renderDataPoints = (
-    dataForRender,
-    dataPtsShape,
-    dataPtsWidth,
-    dataPtsHeight,
-    dataPtsColor,
-    dataPtsRadius,
-    textColor,
-    textFontSize,
-    startIndex,
-    endIndex,
+    dataForRender: any[],
+    dataPtsShape: string,
+    dataPtsWidth: number,
+    dataPtsHeight: number,
+    dataPtsColor: string,
+    dataPtsRadius: number,
+    textColor: string,
+    textFontSize: number,
+    startIndex: number,
+    endIndex: number,
   ) => {
     return dataForRender.map((item: itemType, index: number) => {
       if (index < startIndex || index > endIndex) return null;
@@ -1428,7 +1429,7 @@ export const LineChartBicolor = (props: propTypes) => {
                   : containerHeight -
                     dataPointsHeight / 2 +
                     20 -
-                    (item.value * containerHeight) / maxValue
+                    ((item.value ?? 0) * containerHeight) / maxValue
               }
               width={currentStripWidth}
               height={
@@ -1447,7 +1448,7 @@ export const LineChartBicolor = (props: propTypes) => {
                   height: dataPointsHeight,
                   width: dataPointsWidth,
                   top:
-                    containerHeight - (item.value * containerHeight) / maxValue,
+                    containerHeight - ((item.value ?? 0) * containerHeight) / maxValue,
                   left: initialSpacing - dataPointsWidth + spacing * index,
                 },
               ]}>
@@ -1463,7 +1464,7 @@ export const LineChartBicolor = (props: propTypes) => {
                     containerHeight -
                     dataPointsHeight / 2 +
                     10 -
-                    (item.value * containerHeight) / maxValue
+                    ((item.value ?? 0) * containerHeight) / maxValue
                   }
                   width={dataPointsWidth}
                   height={dataPointsHeight}
@@ -1488,7 +1489,7 @@ export const LineChartBicolor = (props: propTypes) => {
                   cy={
                     containerHeight +
                     10 -
-                    (item.value * containerHeight) / maxValue
+                    ((item.value ?? 0) * containerHeight) / maxValue
                   }
                   r={dataPointsRadius}
                   fill={
@@ -1516,7 +1517,7 @@ export const LineChartBicolor = (props: propTypes) => {
                       (item.dataPointLabelShiftY ||
                         props.dataPointLabelShiftY ||
                         0) -
-                      (item.value * containerHeight) / maxValue,
+                      ((item.value ?? 0) * containerHeight) / maxValue,
                     left:
                       initialSpacing +
                       (item.dataPointLabelShiftX ||
@@ -1549,7 +1550,7 @@ export const LineChartBicolor = (props: propTypes) => {
                   containerHeight -
                   dataPointsHeight / 2 +
                   10 -
-                  (item.value * containerHeight) / maxValue +
+                  ((item.value ?? 0) * containerHeight) / maxValue +
                   (item.textShiftY || props.textShiftY || 0)
                 }>
                 {!showTextOnPress ? item.dataPointText : text}
@@ -1575,14 +1576,14 @@ export const LineChartBicolor = (props: propTypes) => {
             y={
               item.verticalLineUptoDataPoint
                 ? containerHeight -
-                  (item.value * containerHeight) / maxValue +
+                  ((item.value ?? 0) * containerHeight) / maxValue +
                   10
                 : -xAxisThickness
             }
             width={item.verticalLineThickness || 1}
             height={
               item.verticalLineUptoDataPoint
-                ? (item.value * containerHeight) / maxValue - xAxisThickness
+                ? ((item.value ?? 0) * containerHeight) / maxValue - xAxisThickness
                 : containerHeight + 10 - xAxisThickness
             }
             fill={item.verticalLineColor || 'lightgray'}
@@ -1609,7 +1610,7 @@ export const LineChartBicolor = (props: propTypes) => {
         strokeDashArray.length === 2 &&
         typeof strokeDashArray[0] === 'number' &&
         typeof strokeDashArray[1] === 'number'
-          ? pointsArray.map(points => (
+          ? pointsArray.map((points: any) => (
               <Path
                 d={points.points}
                 fill="none"
@@ -1618,7 +1619,7 @@ export const LineChartBicolor = (props: propTypes) => {
                 strokeDasharray={strokeDashArray}
               />
             ))
-          : pointsArray.map(points => {
+          : pointsArray.map((points: any) => {
               return (
                 <Path
                   d={points.points}
@@ -1670,7 +1671,7 @@ export const LineChartBicolor = (props: propTypes) => {
           </>
         )}
         {areaChart
-          ? fillPointsArray.map(item => {
+          ? fillPointsArray.map((item: any) => {
               return (
                 <Path
                   d={item.points}
@@ -1795,6 +1796,7 @@ export const LineChartBicolor = (props: propTypes) => {
       ]}>
       {props.hideAxesAndRules !== true && renderHorizSections()}
       {/* {sectionsOverlay()} */}
+      {/* @ts-ignore */}
       <ScrollView
         horizontal
         contentContainerStyle={[
@@ -1833,7 +1835,7 @@ export const LineChartBicolor = (props: propTypes) => {
           props.width && {width: props.width + 10},
         ]}>
         {showVerticalLines &&
-          verticalLinesAr.map((item: itemType, index: number) => {
+          verticalLinesAr.map((item: itemType | number, index: number) => {
             return (
               <View
                 key={index}
@@ -1843,7 +1845,7 @@ export const LineChartBicolor = (props: propTypes) => {
                   marginBottom: xAxisThickness,
                   height: verticalLinesUptoDataPoint
                     ? index < data.length
-                      ? (data[index].value * containerHeight) / maxValue -
+                      ? ((data[index]?.value ?? 0) * containerHeight) / maxValue -
                         xAxisThickness
                       : verticalLinesHeight || 0
                     : verticalLinesHeight ||

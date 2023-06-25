@@ -135,14 +135,14 @@ const AnimatedBar = (props: animatedBarPropTypes) => {
           {/*******************          Top View             *****************/}
           {props.height ? (
             <>
-              <View style={{position: 'absolute', top: sideWidth / -2}}>
+              <View style={{position: 'absolute', top: sideWidth ? (sideWidth / -2) : 0}}>
                 <TriangleCorner
                   color={topColor}
-                  width={sideWidth}
+                  width={sideWidth ?? 0}
                   style={{transform: [{rotate: '90deg'}], opacity: opacity}}
                 />
               </View>
-              <View style={{position: 'absolute', top: sideWidth / -2}}>
+              <View style={{position: 'absolute', top: sideWidth ? (sideWidth / -2) : 0}}>
                 <View
                   style={{
                     width: width,
@@ -156,12 +156,12 @@ const AnimatedBar = (props: animatedBarPropTypes) => {
               <View
                 style={{
                   position: 'absolute',
-                  top: sideWidth / -2,
+                  top: sideWidth ? (sideWidth / -2) : 0,
                   left: width,
                 }}>
                 <TriangleCorner
                   color={topColor}
-                  width={sideWidth}
+                  width={sideWidth ?? 0}
                   style={{transform: [{rotate: '-90deg'}], opacity: opacity}}
                 />
               </View>
@@ -171,23 +171,23 @@ const AnimatedBar = (props: animatedBarPropTypes) => {
           {/*******************************************************************/}
 
           {props.height ? (
-            <View style={{marginTop: sideWidth / -2}}>
+            <View style={{marginTop: sideWidth ? (sideWidth / -2) : 0}}>
               <TriangleCorner
                 color={sideColor}
-                width={sideWidth}
+                width={sideWidth ?? 0}
                 style={{transform: [{rotate: '-90deg'}], opacity: opacity}}
               />
               <View
                 style={{
-                  width: sideWidth / 2,
-                  height: height - sideWidth / 2, //animatedSideHeight
+                  width: sideWidth ? (sideWidth / 2) : 0,
+                  height: height - (sideWidth ? (sideWidth / 2) : 0), //animatedSideHeight
                   backgroundColor: sideColor,
                   opacity: opacity,
                 }}
               />
               <TriangleCorner
                 color={sideColor}
-                width={sideWidth}
+                width={sideWidth ?? 0}
                 style={{transform: [{rotate: '90deg'}], opacity: opacity}}
               />
             </View>

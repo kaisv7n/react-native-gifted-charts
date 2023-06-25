@@ -125,7 +125,7 @@ const Animated2DWithGradient = (props: propTypes) => {
               (noAnimation
                 ? Math.max(
                     props.minHeight,
-                    (Math.abs(item.value) * (containerHeight || 200)) /
+                    (Math.abs(item.value ?? 0) * (containerHeight || 200)) /
                       (maxValue || 200),
                   )
                 : height) - (barMarginBottom || 0),
@@ -138,7 +138,7 @@ const Animated2DWithGradient = (props: propTypes) => {
                   (noAnimation
                     ? Math.max(
                         props.minHeight,
-                        (Math.abs(item.value) * (containerHeight || 200)) /
+                        (Math.abs(item.value ?? 0) * (containerHeight || 200)) /
                           (maxValue || 200),
                       )
                     : height) - (barMarginBottom || 0),
@@ -267,7 +267,7 @@ const Animated2DWithGradient = (props: propTypes) => {
                 <Defs>
                   {item.barBackgroundPattern
                     ? item.barBackgroundPattern()
-                    : barBackgroundPattern()}
+                    : barBackgroundPattern && barBackgroundPattern()}
                 </Defs>
                 <Rect
                   stroke="transparent"
@@ -276,7 +276,7 @@ const Animated2DWithGradient = (props: propTypes) => {
                   width={item.barWidth || props.barWidth || 30}
                   height={
                     noAnimation
-                      ? (Math.abs(item.value) * (containerHeight || 200)) /
+                      ? (Math.abs(item.value ?? 0) * (containerHeight || 200)) /
                         (maxValue || 200)
                       : height
                   }
@@ -295,13 +295,13 @@ const Animated2DWithGradient = (props: propTypes) => {
                   width: item.barWidth || barWidth || 30,
                   justifyContent:
                     (props.horizontal && !props.intactTopLabel) ||
-                    item.value < 0
+                    (item.value ?? 0) < 0
                       ? 'center'
                       : 'flex-end',
                   alignItems: 'center',
                   opacity: opacity,
                 },
-                item.value < 0 && {transform: [{rotate: '180deg'}]},
+                (item.value ?? 0) < 0 && {transform: [{rotate: '180deg'}]},
                 props.horizontal &&
                   !props.intactTopLabel && {transform: [{rotate: '270deg'}]},
                 item.topLabelContainerStyle,

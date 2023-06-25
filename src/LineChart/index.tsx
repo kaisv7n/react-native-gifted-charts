@@ -28,8 +28,8 @@ import Svg, {
 import {svgPath, bezierCommand} from '../utils';
 import Rule from '../Components/lineSvg';
 
-let initialData = null;
-let animations = [];
+let initialData: any = null;
+let animations: any = [];
 
 type propTypes = {
   height?: number;
@@ -392,7 +392,7 @@ type Pointer = {
 };
 
 export const LineChart = (props: propTypes) => {
-  const scrollRef = useRef();
+  const scrollRef: any = useRef();
   const [scrollX, setScrollX] = useState(0);
   const [arrow1Points, setArrow1Points] = useState('');
   const [arrow2Points, setArrow2Points] = useState('');
@@ -402,27 +402,27 @@ export const LineChart = (props: propTypes) => {
   const [pointerIndex, setPointerIndex] = useState(-1);
   const [pointerX, setPointerX] = useState(0);
   const [pointerY, setPointerY] = useState(0);
-  const [pointerItem, setPointerItem] = useState({
+  const [pointerItem, setPointerItem] = useState<any>({
     pointerShiftX: 0,
     pointerShiftY: 0,
   });
   const [pointerY2, setPointerY2] = useState(0);
-  const [pointerItem2, setPointerItem2] = useState({
+  const [pointerItem2, setPointerItem2] = useState<any>({
     pointerShiftX: 0,
     pointerShiftY: 0,
   });
   const [pointerY3, setPointerY3] = useState(0);
-  const [pointerItem3, setPointerItem3] = useState({
+  const [pointerItem3, setPointerItem3] = useState<any>({
     pointerShiftX: 0,
     pointerShiftY: 0,
   });
   const [pointerY4, setPointerY4] = useState(0);
-  const [pointerItem4, setPointerItem4] = useState({
+  const [pointerItem4, setPointerItem4] = useState<any>({
     pointerShiftX: 0,
     pointerShiftY: 0,
   });
   const [pointerY5, setPointerY5] = useState(0);
-  const [pointerItem5, setPointerItem5] = useState({
+  const [pointerItem5, setPointerItem5] = useState<any>({
     pointerShiftX: 0,
     pointerShiftY: 0,
   });
@@ -447,7 +447,7 @@ export const LineChart = (props: propTypes) => {
     }
     if (props.yAxisOffset) {
       return props.data.map(item => {
-        item.value = item.value - props.yAxisOffset;
+        item.value = (item?.value ?? 0) - (props.yAxisOffset ?? 0);
         return item;
       });
     }
@@ -459,7 +459,7 @@ export const LineChart = (props: propTypes) => {
     }
     if (props.yAxisOffset) {
       return props.data2.map(item => {
-        item.value = item.value - props.yAxisOffset;
+        item.value = (item?.value ?? 0) - (props.yAxisOffset ?? 0);
         return item;
       });
     }
@@ -471,7 +471,7 @@ export const LineChart = (props: propTypes) => {
     }
     if (props.yAxisOffset) {
       return props.data3.map(item => {
-        item.value = item.value - props.yAxisOffset;
+        item.value = (item?.value ?? 0) - (props.yAxisOffset ?? 0);
         return item;
       });
     }
@@ -483,7 +483,7 @@ export const LineChart = (props: propTypes) => {
     }
     if (props.yAxisOffset) {
       return props.data4.map(item => {
-        item.value = item.value - props.yAxisOffset;
+        item.value = (item?.value ?? 0) - (props.yAxisOffset ?? 0);
         return item;
       });
     }
@@ -495,7 +495,7 @@ export const LineChart = (props: propTypes) => {
     }
     if (props.yAxisOffset) {
       return props.data5.map(item => {
-        item.value = item.value - props.yAxisOffset;
+        item.value = (item?.value ?? 0) - (props.yAxisOffset ?? 0);
         return item;
       });
     }
@@ -528,7 +528,7 @@ export const LineChart = (props: propTypes) => {
   const startIndex1 =
     props.startIndex1 === 0 ? 0 : props.startIndex1 || props.startIndex || 0;
 
-  let endIndex1;
+  let endIndex1: any;
   if (props.endIndex1 === undefined || props.endIndex1 === null) {
     if (props.endIndex === undefined || props.endIndex === null) {
       endIndex1 = data.length - 1;
@@ -555,7 +555,7 @@ export const LineChart = (props: propTypes) => {
 
   if (!initialData) {
     initialData = [...data];
-    animations = initialData.map(item => new Animated.Value(item.value));
+    animations = initialData.map((item: any) => new Animated.Value(item.value));
   }
 
   let newPoints = '',
@@ -630,8 +630,8 @@ export const LineChart = (props: propTypes) => {
     props.dataPointsShape5 || props.dataPointsShape || 'circular';
 
   if (animateOnDataChange) {
-    animations.forEach((item, index) => {
-      item.addListener(val => {
+    animations.forEach((item: any, index: number) => {
+      item.addListener((val: any) => {
         data[index].value = val.value;
         let pp = '',
           ppp = '';
@@ -643,7 +643,7 @@ export const LineChart = (props: propTypes) => {
               ' ' +
               (containerHeight +
                 10 -
-                (data[i].value * containerHeight) / maxValue) +
+                ((data[i]?.value ?? 0) * containerHeight) / maxValue) +
               ' ';
           }
           if (areaChart) {
@@ -692,9 +692,9 @@ export const LineChart = (props: propTypes) => {
   useEffect(() => {
     if (animateOnDataChange) {
       Animated.parallel(
-        animations.map((anItem, index) =>
+        animations.map((anItem: any, index: number) =>
           Animated.timing(anItem, {
-            toValue: data[index].value,
+            toValue: data[index]?.value ?? 0,
             useNativeDriver: true,
             duration: onDataChangeAnimationDuration,
           }),
@@ -782,14 +782,15 @@ export const LineChart = (props: propTypes) => {
   const xAxisColor = props.xAxisColor || 'black';
 
   let totalWidth = initialSpacing;
-  let maxItem = 0,
+  let maxItem: number = 0,
     minItem = 0;
   data.forEach((item: itemType) => {
-    if (item.value > maxItem) {
-      maxItem = item.value;
+    const value = (item?.value ?? 0)
+    if (value > maxItem) {
+      maxItem = value;
     }
-    if (item.value < minItem) {
-      minItem = item.value;
+    if (value < minItem) {
+      minItem = value;
     }
     totalWidth += spacing;
   });
@@ -1074,13 +1075,13 @@ export const LineChart = (props: propTypes) => {
     defaultArrowConfig.showArrowBase;
 
   const getArrowPoints = (
-    arrowTipX,
-    arrowTipY,
-    x1,
-    y1,
-    arrowLength,
-    arrowWidth,
-    showArrowBase,
+    arrowTipX: number,
+    arrowTipY: number,
+    x1: number,
+    y1: number,
+    arrowLength: number,
+    arrowWidth: number,
+    showArrowBase: boolean,
   ) => {
     let dataLineSlope = (arrowTipY - y1) / (arrowTipX - x1);
     let d = arrowLength;
@@ -1134,7 +1135,7 @@ export const LineChart = (props: propTypes) => {
             ' ' +
             (containerHeight +
               10 -
-              (data[i].value * containerHeight) / maxValue) +
+              ((data[i].value ?? 0) * containerHeight) / maxValue) +
             ' ';
           // setPoints(pp.replace('L', 'M'));
         }
@@ -1145,7 +1146,7 @@ export const LineChart = (props: propTypes) => {
             ' ' +
             (containerHeight +
               10 -
-              (data2[i].value * containerHeight) / maxValue) +
+              ((data2[i].value ?? 0) * containerHeight) / maxValue) +
             ' ';
         }
         if (data3.length && i >= startIndex3 && i <= endIndex3) {
@@ -1155,7 +1156,7 @@ export const LineChart = (props: propTypes) => {
             ' ' +
             (containerHeight +
               10 -
-              (data3[i].value * containerHeight) / maxValue) +
+              ((data3[i].value ?? 0) * containerHeight) / maxValue) +
             ' ';
         }
         if (data4.length && i >= startIndex4 && i <= endIndex4) {
@@ -1165,7 +1166,7 @@ export const LineChart = (props: propTypes) => {
             ' ' +
             (containerHeight +
               10 -
-              (data4[i].value * containerHeight) / maxValue) +
+              ((data4[i].value ?? 0) * containerHeight) / maxValue) +
             ' ';
         }
         if (data5.length && i >= startIndex5 && i <= endIndex5) {
@@ -1175,7 +1176,7 @@ export const LineChart = (props: propTypes) => {
             ' ' +
             (containerHeight +
               10 -
-              (data5[i].value * containerHeight) / maxValue) +
+              ((data5[i].value ?? 0) * containerHeight) / maxValue) +
             ' ';
         }
       }
@@ -1430,7 +1431,7 @@ export const LineChart = (props: propTypes) => {
         if (i >= startIndex1 && i <= endIndex1) {
           p1Array.push([
             initialSpacing - dataPointsWidth1 / 2 + spacing * i,
-            containerHeight + 10 - (data[i].value * containerHeight) / maxValue,
+            containerHeight + 10 - ((data[i].value ?? 0) * containerHeight) / maxValue,
           ]);
         }
         if (data2.length && i >= startIndex2 && i <= endIndex2) {
@@ -1438,7 +1439,7 @@ export const LineChart = (props: propTypes) => {
             initialSpacing - dataPointsWidth2 / 2 + spacing * i,
             containerHeight +
               10 -
-              (data2[i].value * containerHeight) / maxValue,
+              ((data2[i].value ?? 0) * containerHeight) / maxValue,
           ]);
         }
         if (data3.length && i >= startIndex3 && i <= endIndex3) {
@@ -1446,7 +1447,7 @@ export const LineChart = (props: propTypes) => {
             initialSpacing - dataPointsWidth3 / 2 + spacing * i,
             containerHeight +
               10 -
-              (data3[i].value * containerHeight) / maxValue,
+              ((data3[i].value ?? 0) * containerHeight) / maxValue,
           ]);
         }
         if (data4.length && i >= startIndex4 && i <= endIndex4) {
@@ -1454,7 +1455,7 @@ export const LineChart = (props: propTypes) => {
             initialSpacing - dataPointsWidth4 / 2 + spacing * i,
             containerHeight +
               10 -
-              (data4[i].value * containerHeight) / maxValue,
+              ((data4[i].value ?? 0) * containerHeight) / maxValue,
           ]);
         }
         if (data5.length && i >= startIndex5 && i <= endIndex5) {
@@ -1462,7 +1463,7 @@ export const LineChart = (props: propTypes) => {
             initialSpacing - dataPointsWidth5 / 2 + spacing * i,
             containerHeight +
               10 -
-              (data5[i].value * containerHeight) / maxValue,
+              ((data5[i].value ?? 0) * containerHeight) / maxValue,
           ]);
         }
       }
@@ -1591,7 +1592,7 @@ export const LineChart = (props: propTypes) => {
             ',' +
             (containerHeight +
               10 -
-              (data[0].value * containerHeight) / maxValue) +
+              ((data[0].value ?? 0) * containerHeight) / maxValue) +
             ' ' +
             xx +
             ' ' +
@@ -1623,7 +1624,7 @@ export const LineChart = (props: propTypes) => {
             ',' +
             (containerHeight +
               10 -
-              (data2[0].value * containerHeight) / maxValue) +
+              ((data2[0].value ?? 0) * containerHeight) / maxValue) +
             ' ' +
             xx2 +
             ' ' +
@@ -1654,7 +1655,7 @@ export const LineChart = (props: propTypes) => {
             ',' +
             (containerHeight +
               10 -
-              (data3[0].value * containerHeight) / maxValue) +
+              ((data3[0].value ?? 0) * containerHeight) / maxValue) +
             ' ' +
             xx3 +
             ' ' +
@@ -1685,7 +1686,7 @@ export const LineChart = (props: propTypes) => {
             ',' +
             (containerHeight +
               10 -
-              (data4[0].value * containerHeight) / maxValue) +
+              ((data4[0].value ?? 0) * containerHeight) / maxValue) +
             ' ' +
             xx4 +
             ' ' +
@@ -1716,7 +1717,7 @@ export const LineChart = (props: propTypes) => {
             ',' +
             (containerHeight +
               10 -
-              (data5[0].value * containerHeight) / maxValue) +
+              ((data5[0].value ?? 0) * containerHeight) / maxValue) +
             ' ' +
             xx5 +
             ' ' +
@@ -1791,7 +1792,7 @@ export const LineChart = (props: propTypes) => {
   ]);
 
   const horizSections = [{value: '0'}];
-  const horizSectionsBelow = [];
+  const horizSectionsBelow: any = [];
   const stepHeight = props.stepHeight || containerHeight / noOfSections;
   const stepValue = props.stepValue || maxValue / noOfSections;
   const noOfSectionsBelowXAxis =
@@ -2222,7 +2223,7 @@ export const LineChart = (props: propTypes) => {
   //     )
   // }
 
-  const getLabel = (val, index) => {
+  const getLabel = (val: any, index: number) => {
     let label = '';
     if (
       showFractionalValues ||
@@ -2382,7 +2383,7 @@ export const LineChart = (props: propTypes) => {
           /***********************************************************************************************/
         }
 
-        {horizSectionsBelow.map((sectionItems, index) => {
+        {horizSectionsBelow.map((sectionItems: any, index: number) => {
           return (
             <View
               key={index}
@@ -2434,7 +2435,7 @@ export const LineChart = (props: propTypes) => {
           /***********************************************************************************************/
           props.hideAxesAndRules !== true &&
             !hideYAxisText &&
-            horizSectionsBelow.map((sectionItems, index) => {
+            horizSectionsBelow.map((sectionItems: any, index: number) => {
               let label = getLabel(
                 horizSectionsBelow[horizSectionsBelow.length - 1 - index].value,
                 index,
@@ -2608,7 +2609,7 @@ export const LineChart = (props: propTypes) => {
     );
   };
 
-  const onStripPress = (item, index) => {
+  const onStripPress = (item: any, index: number) => {
     setSelectedIndex(index);
     if (props.onPress) {
       props.onPress(item, index);
@@ -2616,16 +2617,16 @@ export const LineChart = (props: propTypes) => {
   };
 
   const renderDataPoints = (
-    dataForRender,
-    dataPtsShape,
-    dataPtsWidth,
-    dataPtsHeight,
-    dataPtsColor,
-    dataPtsRadius,
-    textColor,
-    textFontSize,
-    startIndex,
-    endIndex,
+    dataForRender: any,
+    dataPtsShape: any,
+    dataPtsWidth: number,
+    dataPtsHeight: number,
+    dataPtsColor: string,
+    dataPtsRadius: number,
+    textColor: string,
+    textFontSize: number,
+    startIndex: number,
+    endIndex: number,
   ) => {
     return dataForRender.map((item: itemType, index: number) => {
       if (index < startIndex || index > endIndex) return null;
@@ -2735,7 +2736,7 @@ export const LineChart = (props: propTypes) => {
                   : containerHeight -
                     dataPointsHeight / 2 +
                     20 -
-                    (item.value * containerHeight) / maxValue
+                    ((item.value ?? 0) * containerHeight) / maxValue
               }
               width={currentStripWidth}
               height={
@@ -2754,7 +2755,7 @@ export const LineChart = (props: propTypes) => {
                   height: dataPointsHeight,
                   width: dataPointsWidth,
                   top:
-                    containerHeight - (item.value * containerHeight) / maxValue,
+                    containerHeight - ((item.value ?? 0) * containerHeight) / maxValue,
                   left: initialSpacing - dataPointsWidth + spacing * index,
                 },
               ]}>
@@ -2770,7 +2771,7 @@ export const LineChart = (props: propTypes) => {
                     containerHeight -
                     dataPointsHeight / 2 +
                     10 -
-                    (item.value * containerHeight) / maxValue
+                    ((item.value ?? 0) * containerHeight) / maxValue
                   }
                   width={dataPointsWidth}
                   height={dataPointsHeight}
@@ -2795,7 +2796,7 @@ export const LineChart = (props: propTypes) => {
                   cy={
                     containerHeight +
                     10 -
-                    (item.value * containerHeight) / maxValue
+                    ((item.value ?? 0) * containerHeight) / maxValue
                   }
                   r={dataPointsRadius}
                   fill={
@@ -2823,7 +2824,7 @@ export const LineChart = (props: propTypes) => {
                       (item.dataPointLabelShiftY ||
                         props.dataPointLabelShiftY ||
                         0) -
-                      (item.value * containerHeight) / maxValue,
+                      ((item.value ?? 0) * containerHeight) / maxValue,
                     left:
                       initialSpacing +
                       (item.dataPointLabelShiftX ||
@@ -2856,7 +2857,7 @@ export const LineChart = (props: propTypes) => {
                   containerHeight -
                   dataPointsHeight / 2 +
                   10 -
-                  (item.value * containerHeight) / maxValue +
+                  ((item.value ?? 0) * containerHeight) / maxValue +
                   (item.textShiftY || props.textShiftY || 0)
                 }>
                 {!showTextOnPress ? item.dataPointText : text}
@@ -2882,14 +2883,14 @@ export const LineChart = (props: propTypes) => {
             y={
               item.verticalLineUptoDataPoint
                 ? containerHeight -
-                  (item.value * containerHeight) / maxValue +
+                  ((item.value ?? 0) * containerHeight) / maxValue +
                   10
                 : -xAxisThickness
             }
             width={item.verticalLineThickness || 1}
             height={
               item.verticalLineUptoDataPoint
-                ? (item.value * containerHeight) / maxValue - xAxisThickness
+                ? ((item.value ?? 0) * containerHeight) / maxValue - xAxisThickness
                 : containerHeight + 10 - xAxisThickness
             }
             fill={item.verticalLineColor || 'lightgray'}
@@ -2911,27 +2912,27 @@ export const LineChart = (props: propTypes) => {
       case 1:
         pointerItemLocal = pointerItem;
         pointerYLocal = pointerY;
-        pointerColorLocal = pointerConfig.pointer1Color || pointerColor;
+        pointerColorLocal = pointerConfig?.pointer1Color || pointerColor;
         break;
       case 2:
         pointerItemLocal = pointerItem2;
         pointerYLocal = pointerY2;
-        pointerColorLocal = pointerConfig.pointer2Color || pointerColor;
+        pointerColorLocal = pointerConfig?.pointer2Color || pointerColor;
         break;
       case 3:
         pointerItemLocal = pointerItem3;
         pointerYLocal = pointerY3;
-        pointerColorLocal = pointerConfig.pointer3Color || pointerColor;
+        pointerColorLocal = pointerConfig?.pointer3Color || pointerColor;
         break;
       case 4:
         pointerItemLocal = pointerItem4;
         pointerYLocal = pointerY4;
-        pointerColorLocal = pointerConfig.pointer4Color || pointerColor;
+        pointerColorLocal = pointerConfig?.pointer4Color || pointerColor;
         break;
       case 5:
         pointerItemLocal = pointerItem5;
         pointerYLocal = pointerY5;
-        pointerColorLocal = pointerConfig.pointer5Color || pointerColor;
+        pointerColorLocal = pointerConfig?.pointer5Color || pointerColor;
         break;
     }
 
@@ -2939,7 +2940,7 @@ export const LineChart = (props: propTypes) => {
       <View
         style={{
           position: 'absolute',
-          left: pointerX + (pointerItemLocal.pointerShiftX || 0),
+          left: pointerX + (pointerItemLocal?.pointerShiftX || 0),
           top: pointerYLocal,
         }}>
         {pointerComponent ? (
@@ -2949,7 +2950,7 @@ export const LineChart = (props: propTypes) => {
             style={{
               height: pointerHeight || pointerRadius * 2,
               width: pointerWidth || pointerRadius * 2,
-              marginTop: pointerItemLocal.pointerShiftY || 0,
+              marginTop: pointerItemLocal?.pointerShiftY || 0,
               backgroundColor: pointerColorLocal,
               borderRadius: pointerRadius || 0,
             }}
@@ -3004,7 +3005,7 @@ export const LineChart = (props: propTypes) => {
         } else if (
           activatePointersOnLongPress &&
           pointerX - scrollX >
-            (props.width + 10 ||
+            ((props.width ?? 0) + 10 ||
               Dimensions.get('window').width - yAxisLabelWidth - 15) -
               pointerLabelWidth / 2
         ) {
@@ -3060,9 +3061,7 @@ export const LineChart = (props: propTypes) => {
                 stroke={pointerStripColor}
                 strokeWidth={pointerStripWidth}
                 strokeDasharray={
-                  pointerConfig.strokeDashArray
-                    ? pointerConfig.strokeDashArray
-                    : ''
+                  pointerConfig?.strokeDashArray || ''
                 }
                 x1={0}
                 y1={0}
@@ -3108,11 +3107,11 @@ export const LineChart = (props: propTypes) => {
     startOpacity: number,
     endOpacity: number,
     strokeDashArray: Array<number> | undefined | null,
-    showArrow: boolean,
-    arrowPoints,
-    arrowStrokeWidth,
-    arrowStrokeColor,
-    arrowFillColor,
+    showArrow: boolean | undefined,
+    arrowPoints: any,
+    arrowStrokeWidth: number | undefined,
+    arrowStrokeColor: string | undefined,
+    arrowFillColor: string | undefined,
   ) => {
     return (
       <Svg>
@@ -3268,11 +3267,11 @@ export const LineChart = (props: propTypes) => {
     startOpacity: number,
     endOpacity: number,
     strokeDashArray: Array<number> | undefined | null,
-    showArrow,
-    arrowPoints,
-    arrowStrokeWidth,
-    arrowStrokeColor,
-    arrowFillColor,
+    showArrow?: boolean,
+    arrowPoints?: any,
+    arrowStrokeWidth?: number,
+    arrowStrokeColor?: string,
+    arrowFillColor?: string,
   ) => {
     return (
       <View
@@ -3305,7 +3304,7 @@ export const LineChart = (props: propTypes) => {
           item = data[factor];
           y =
             containerHeight -
-            (item.value * containerHeight) / maxValue -
+            ((item.value ?? 0) * containerHeight) / maxValue -
             (pointerRadius || pointerHeight / 2) +
             10;
           setPointerY(y);
@@ -3315,7 +3314,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY2(y);
@@ -3327,7 +3326,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY3(y);
@@ -3339,7 +3338,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY4(y);
@@ -3351,11 +3350,11 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY5(y);
-              setPointerItem5(item);
+              setPointerItem5(item)
             }
           }
         }}
@@ -3391,7 +3390,7 @@ export const LineChart = (props: propTypes) => {
           item = data[factor];
           y =
             containerHeight -
-            (item.value * containerHeight) / maxValue -
+            ((item.value ?? 0) * containerHeight) / maxValue -
             (pointerRadius || pointerHeight / 2) +
             10;
           setPointerY(y);
@@ -3401,7 +3400,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY2(y);
@@ -3413,7 +3412,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY3(y);
@@ -3425,7 +3424,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY4(y);
@@ -3437,7 +3436,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY5(y);
@@ -3503,11 +3502,11 @@ export const LineChart = (props: propTypes) => {
     startOpacity: number,
     endOpacity: number,
     strokeDashArray: Array<number> | undefined | null,
-    showArrow,
-    arrowPoints,
-    arrowStrokeWidth,
-    arrowStrokeColor,
-    arrowFillColor,
+    showArrow: boolean,
+    arrowPoints: any,
+    arrowStrokeWidth: number,
+    arrowStrokeColor: string,
+    arrowFillColor: string,
   ) => {
     // console.log('animatedWidth is-------->', animatedWidth);
     return (
@@ -3541,7 +3540,7 @@ export const LineChart = (props: propTypes) => {
           item = data[factor];
           y =
             containerHeight -
-            (item.value * containerHeight) / maxValue -
+            ((item.value ?? 0) * containerHeight) / maxValue -
             (pointerRadius || pointerHeight / 2) +
             10;
           setPointerY(y);
@@ -3551,7 +3550,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY2(y);
@@ -3563,7 +3562,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY3(y);
@@ -3575,7 +3574,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY4(y);
@@ -3587,7 +3586,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY5(y);
@@ -3626,7 +3625,7 @@ export const LineChart = (props: propTypes) => {
           item = data[factor];
           y =
             containerHeight -
-            (item.value * containerHeight) / maxValue -
+            ((item.value ?? 0) * containerHeight) / maxValue -
             (pointerRadius || pointerHeight / 2) +
             10;
           setPointerY(y);
@@ -3636,7 +3635,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY2(y);
@@ -3648,7 +3647,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY3(y);
@@ -3660,7 +3659,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY4(y);
@@ -3672,7 +3671,7 @@ export const LineChart = (props: propTypes) => {
             if (item) {
               y =
                 containerHeight -
-                (item.value * containerHeight) / maxValue -
+                ((item.value ?? 0) * containerHeight) / maxValue -
                 (pointerRadius || pointerHeight / 2) +
                 10;
               setPointerY5(y);
@@ -3741,6 +3740,7 @@ export const LineChart = (props: propTypes) => {
       ]}>
       {props.hideAxesAndRules !== true && renderHorizSections()}
       {/* {sectionsOverlay()} */}
+      {/* @ts-ignore */}
       <ScrollView
         horizontal
         contentContainerStyle={[
@@ -3788,7 +3788,7 @@ export const LineChart = (props: propTypes) => {
           props.width && {width: props.width + 10},
         ]}>
         {showVerticalLines &&
-          verticalLinesAr.map((item: itemType, index: number) => {
+          verticalLinesAr.map((item: any, index: number) => {
             return (
               <View
                 key={index}
@@ -3798,7 +3798,7 @@ export const LineChart = (props: propTypes) => {
                   marginBottom: xAxisThickness,
                   height: verticalLinesUptoDataPoint
                     ? index < data.length
-                      ? (data[index].value * containerHeight) / maxValue -
+                      ? ((data[index].value ?? 0) * containerHeight) / maxValue -
                         xAxisThickness
                       : verticalLinesHeight || 0
                     : verticalLinesHeight ||
@@ -3847,7 +3847,7 @@ export const LineChart = (props: propTypes) => {
               startOpacity1,
               endOpacity1,
               strokeDashArray1,
-              props.showArrow1 || props.showArrows,
+              (props.showArrow1 || props.showArrows) ?? false,
               arrow1Points,
               arrowStrokeWidth1,
               arrowStrokeColor1,
@@ -3884,7 +3884,7 @@ export const LineChart = (props: propTypes) => {
                 startOpacity2,
                 endOpacity2,
                 strokeDashArray2,
-                props.showArrow2 || props.showArrows,
+                (props.showArrow2 || props.showArrows) ?? false,
                 arrow2Points,
                 arrowStrokeWidth2,
                 arrowStrokeColor2,
@@ -3922,7 +3922,7 @@ export const LineChart = (props: propTypes) => {
                 startOpacity3,
                 endOpacity3,
                 strokeDashArray3,
-                props.showArrow3 || props.showArrows,
+                (props.showArrow3 || props.showArrows) ?? false,
                 arrow3Points,
                 arrowStrokeWidth3,
                 arrowStrokeColor3,
@@ -3960,7 +3960,7 @@ export const LineChart = (props: propTypes) => {
                 startOpacity4,
                 endOpacity4,
                 strokeDashArray4,
-                props.showArrow4 || props.showArrows,
+                (props.showArrow4 || props.showArrows) ?? false,
                 arrow4Points,
                 arrowStrokeWidth4,
                 arrowStrokeColor4,
@@ -3998,7 +3998,7 @@ export const LineChart = (props: propTypes) => {
                 startOpacity5,
                 endOpacity5,
                 strokeDashArray5,
-                props.showArrow5 || props.showArrows,
+                (props.showArrow5 || props.showArrows) ?? false,
                 arrow5Points,
                 arrowStrokeWidth5,
                 arrowStrokeColor5,
